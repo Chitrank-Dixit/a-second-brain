@@ -17,6 +17,7 @@ import glob
 from asb.brain.scheduler import start_weekly_compression
 from asb.brain.self_evaluator import SelfEvaluator
 from asb.brain.research_agent import ResearchAgent
+from asb.brain.automation_graph import workflow
 log = setup_logger()
 
 app = typer.Typer()
@@ -170,6 +171,19 @@ def schedule_research():
     """Start weekly autonomous research."""
     from asb.brain.scheduler_research import start_weekly_research
     start_weekly_research()
+
+@app.command()
+def automate():
+    """Run the full ASB cognitive automation loop."""
+    print("🚀 Starting autonomous ASB loop via LangGraph")
+    state = {}
+    workflow.invoke(state)
+    print("✅ ASB cognitive loop complete!")
+
+@app.command()
+def schedule_automate():
+    """Schedule daily ASB automation loop."""
+    start_autonomous_loop()
 
 
 if __name__ == "__main__":

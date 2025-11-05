@@ -1,37 +1,24 @@
 # 🧠 Agentic Second Brain (ASB)
 
-A fully-local, **autonomous personal intelligence system** built in Python.  
-Your ASB learns from your notes, projects, reflections, and research — thinking, summarizing, and improving just like a human brain.
+A fully-local, **autonomous cognitive system** that learns, reflects, evaluates, and researches — powered by **Ollama**, **LangChain**, **LangGraph**, and **Streamlit**.  
+Your ASB evolves like a real mind: it thinks, improves, and visualizes its growth.
 
-> ⚙️ Powered by **Ollama**, **LangChain**, **Chroma**, and **Typer CLI**
-
----
-
-## 📚 Table of Contents
-1. [Overview](#overview)
-2. [Architecture](#architecture)
-3. [Setup](#setup)
-4. [Environment Variables](#environment-variables)
-5. [CLI Usage](#cli-usage)
-6. [Phases Implemented](#phases-implemented)
-7. [Intelligence Stack](#intelligence-stack)
-8. [Autonomous Research (Phase 8)](#autonomous-research-phase8)
-9. [Example Flow](#example-flow)
-10. [Future Roadmap](#future-roadmap)
-11. [Author & License](#author--license)
+> “Your second brain should think *with* you, not *for* you.” — Chitrank Dixit
 
 ---
 
 ## 🧩 Overview
 
-ASB is your **Agentic Second Brain** — an evolving system that:
-- 🧠 Stores and embeds your notes for semantic recall  
-- 🪞 Reflects on what you’ve learned  
-- 🔄 Self-evaluates and improves its reasoning  
-- 🌐 Performs autonomous research  
-- 🧩 Compresses and organizes knowledge over time  
+ASB is a modular **agentic framework** for personal knowledge management and reasoning.  
+It can:
 
-Everything runs **locally via Ollama**, ensuring privacy and full offline operation.
+- 🧠 Ingest and embed notes or external context (Git, Notion, Markdown)  
+- 🪞 Reflect on learning and generate new questions  
+- 🔍 Conduct autonomous research via Ollama LLM  
+- 📊 Evaluate reflection quality and cognitive trends  
+- 🧩 Compress memory for long-term insight  
+- 🕸 Visualize your thoughts and relationships in a Streamlit dashboard  
+- 🔁 Automate the entire loop using **LangGraph** workflows
 
 ---
 
@@ -40,210 +27,230 @@ Everything runs **locally via Ollama**, ensuring privacy and full offline operat
 asb/
 ├── asb/
 │   ├── brain/
-│   │   ├── agent.py              # Orchestrates cognition + reasoning
-│   │   ├── cognition.py          # Ollama-based thinking module
-│   │   ├── memory.py             # Vector memory via Chroma + embeddings
-│   │   ├── reflection.py         # Reflection engine (summary + follow-up)
-│   │   ├── insight_db.py         # SQLite database for insights
-│   │   ├── scheduler.py          # Time-based jobs with timeout
-│   │   ├── logger.py             # Persistent daily logs
-│   │   ├── self_evaluator.py     # Reflection scoring & feedback
-│   │   ├── memory_compressor.py  # Long-term memory consolidation
-│   │   ├── ingestion.py          # Context ingestion from Git/Notion/files
-│   │   ├── research_agent.py     # Autonomous research & summarization
-│   │   └── sources/              # Modular adapters (Git, Notion, Local)
+│   │   ├── agent.py              # Cognition layer (LLM orchestration)
+│   │   ├── cognition.py          # Ollama reasoning interface
+│   │   ├── memory.py             # Vector store (Chroma)
+│   │   ├── reflection.py         # Reflection + question generation
+│   │   ├── research_agent.py     # Autonomous research (Ollama + web)
+│   │   ├── self_evaluator.py     # Reflection scoring
+│   │   ├── memory_compressor.py  # Long-term summarization
+│   │   ├── insight_db.py         # SQLite insight store
+│   │   ├── ingestion.py          # Context ingestion from sources
+│   │   ├── automation_graph.py   # LangGraph workflow automation
+│   │   └── sources/              # Git / Notion / Files adapters
+│   ├── dashboard.py              # Streamlit visualization app
 │   ├── main.py                   # Typer CLI entrypoint
 │   └── init.py
 ├── data/
-│   ├── notes/
-│   ├── reflections/
-│   ├── compressed/
-│   ├── questions/
-│   ├── metrics/
-│   ├── logs/
-│   └── vector_store/
+│   ├── notes/ reflections/ compressed/ questions/
+│   ├── metrics/ logs/ vector_store/
+│   └── insights.db
 └── pyproject.toml
 
 ---
 
 ## ⚙️ Setup
 
-### 1️⃣ Install dependencies
+### 1️⃣ Dependencies
+
 ```bash
 uv sync
 
 2️⃣ Install & run Ollama
 
-# macOS / Linux
 brew install ollama
 ollama pull llama3.1:8b
 ollama serve
 
-3️⃣ Environment Variables
+3️⃣ Environment
 
-Create a .env file in your root folder:
+Create .env:
 
 DATA_DIR=./data/notes
 VECTOR_DIR=./data/vector_store
 OLLAMA_MODEL=llama3.1:8b
 OLLAMA_EMBED_MODEL=nomic-embed-text
-SERPER_API_KEY=your_serper_api_key_here   # optional web search
-NOTION_API_KEY=your_notion_api_key_here   # optional
+SERPER_API_KEY=optional_web_api_key
+NOTION_API_KEY=optional_notion_key
 
 
 ⸻
 
-🧠 CLI Usage
+🧠 CLI Commands
 
 Command	Description
-uv run asb ingest	Ingest notes into semantic memory
-uv run asb ask "What did I learn about RabbitMQ persistence?"	Query your brain
-uv run asb reflect	Generate reflection & follow-up questions
-uv run asb schedule -t 1	Run reflection scheduler for 1 hour
-uv run asb ingest-all	Ingest from Git, Notion, and markdown sources
-uv run asb insights retry	Query stored insights by topic
-uv run asb compress -d 14	Compress reflections older than 14 days
-uv run asb evaluate -d 7	Score last 7 reflections for quality
-uv run asb metrics	Show average reflection scores
+uv run asb ingest	Ingest local notes
+uv run asb reflect	Generate reflection + new questions
+uv run asb evaluate -d 7	Evaluate reflection quality
+uv run asb metrics	Display average scores
+uv run asb compress -d 14	Summarize old reflections
+uv run asb ingest-all	Ingest from Git, Notion, files
+uv run asb research -m 3	Auto-research 3 questions (Ollama)
+uv run asb logs -d 1	View last day of logs
 uv run asb focus	Suggest next learning directions
-uv run asb research -m 3	Auto-research 3 open questions via Ollama
-uv run asb logs -d 1	View last day of activity logs
+uv run asb automate	Run full LangGraph cognitive loop
+uv run streamlit run asb/dashboard.py	Launch dashboard
 
 
 ⸻
 
 🔢 Phases Implemented
 
-Phase 1 — Core MVP
-	•	Typer CLI + Rich output
-	•	ChromaDB vector memory
-	•	LLM cognition via Ollama (local) or OpenAI fallback
+Phase 1 – Core MVP
 
-Phase 2 — Living Memory
-	•	Auto-ingestion and reflection system
-	•	Knowledge graph creation
-	•	Timed jobs via APScheduler
+Typer CLI · Chroma memory · Ollama LLM reasoning.
 
-Phase 3 — Self-Reflective Intelligence
-	•	Writes reflection files (reflection_YYYY-MM-DD.md)
-	•	Generates follow-up questions automatically
+Phase 2 – Living Memory
 
-Phase 4 — System Awareness
-	•	Persistent action logs (data/logs/)
-	•	ASB reflects on its own performance
+Automatic ingestion · Reflection scheduling.
 
-Phase 5 — Contextual Autonomy
-	•	Modular source adapters: Git, Notion, Local Files
-	•	Unified ingestion: uv run asb ingest-all
+Phase 3 – Self-Reflective Intelligence
 
-Phase 6 — Memory Compression
-	•	Summarizes older reflections into key insights
-	•	Stores compressed results in DB + /data/compressed
+Daily reflections + follow-up question generation.
 
-Phase 7 — Cognitive Feedback
-	•	Scores reflections (clarity, novelty, redundancy)
-	•	Tracks metrics in /data/metrics/self_scores.csv
-	•	Suggests new focus areas via uv run asb focus
+Phase 4 – System Awareness
 
-Phase 8 — Autonomous Research (Ollama-powered)
-	•	Reads open questions from /data/questions/open_questions.md
-	•	Uses Ollama for reasoning and summarization
-	•	Optional web-search snippets via SERPER_API_KEY
-	•	Stores findings in both Insight DB and vector memory
-	•	Triggers automatic post-research reflection
+Persistent logs · log-reflect for meta-insight.
+
+Phase 5 – Contextual Autonomy
+
+Adapters for Git / Notion / Files → ingest-all.
+
+Phase 6 – Memory Compression
+
+Summarizes 14-day-old reflections to /data/compressed.
+
+Phase 7 – Cognitive Feedback
+
+Self-evaluation (clarity / novelty / redundancy) + focus suggestions.
+
+Phase 8 – Autonomous Research
+
+Ollama-based research agent with optional web search.
+Stores results in Insight DB + vector memory + triggers post-research reflection.
+
+Phase 9 – Visual Insight Dashboard
+
+Streamlit UI for reflections, metrics, tags, semantic search, and knowledge graph.
 
 ⸻
 
-🧬 Autonomous Research (Phase 8)
+🧩 LangGraph Integration (Automation Loop)
 
-🔧 Configuration
+🚀 Goal
 
-.env
+Automate your cognitive pipeline:
 
-OLLAMA_MODEL=llama3.1:8b
-SERPER_API_KEY=optional
+reflect → evaluate → research → compress → repeat
 
-🔍 Run Research
+🧠 Workflow
 
-uv run asb research -m 2
+asb/brain/automation_graph.py
+
+from langgraph.graph import Graph, END
+from asb.brain.reflection import ReflectionEngine
+from asb.brain.self_evaluator import SelfEvaluator
+from asb.brain.research_agent import ResearchAgent
+from asb.brain.memory_compressor import MemoryCompressor
+
+def reflect(_): ReflectionEngine().reflect(); return {"stage": "reflected"}
+def evaluate(_): SelfEvaluator().evaluate_recent_reflections(7); return {"stage": "evaluated"}
+def research(_): ResearchAgent().run_autonomous_research(2); return {"stage": "researched"}
+def compress(_): MemoryCompressor().compress_old_reflections(14); return {"stage": "compressed"}
+
+graph = Graph()
+graph.add_node("reflect", reflect)
+graph.add_node("evaluate", evaluate)
+graph.add_node("research", research)
+graph.add_node("compress", compress)
+graph.set_entry_point("reflect")
+graph.add_edge("reflect", "evaluate")
+graph.add_edge("evaluate", "research")
+graph.add_edge("research", "compress")
+graph.add_edge("compress", END)
+workflow = graph.compile()
+
+Run:
+
+uv run asb automate
 
 Output:
 
-🔎 Researching: How does CPU affinity impact RPC performance?
-🧠 New insight added to long-term memory.
-🔎 Researching: What retry strategies improve persistence?
-🧠 New insight added to long-term memory.
-✅ Research cycle complete — 2 questions processed.
-🪞 Initiating post-research reflection...
-✨ Reflection after research completed.
+🪞 Running reflection...
+📊 Evaluating reflections...
+🔎 Conducting autonomous research...
+🧩 Compressing memory...
+✅ ASB cognitive loop complete!
 
-💡 What Happens
-	1.	Pulls open questions → performs web search (optional).
-	2.	Summarizes findings locally using Ollama LLM.
-	3.	Writes them into:
-	•	insight_db (structured memory)
-	•	Chroma vector store (semantic recall)
-	4.	Triggers reflection to integrate new learnings.
+⏰ Optional Scheduling
+
+Integrate with apscheduler for daily or weekly self-runs:
+
+scheduler.add_job(lambda: workflow.invoke({}), 'interval', days=1)
+
 
 ⸻
 
-🧠 Intelligence Stack
+🧠 Dashboard Highlights (Phase 9)
+
+Run:
+
+uv run streamlit run asb/dashboard.py
+
+Features:
+	•	🧩 Recent Insights panel
+	•	📊 Reflection quality trends
+	•	🕰 Reflection timeline reader
+	•	🏷 Tag frequency bars
+	•	🔍 Semantic search (via Chroma)
+	•	🕸 Interactive knowledge graph (NetworkX + PyVis)
+	•	📈 Insight analytics (topics & frequency)
+
+⸻
+
+🧬 Intelligence Stack
 
 Layer	Implementation
 Reasoning	Ollama LLM (llama3.1:8b, phi3, etc.)
-Embeddings	Local HuggingFace or Ollama embeddings
-Memory	ChromaDB vector store
-Long-term storage	SQLite (insight_db.py)
-Reflection	ReflectionEngine (summarization + questioning)
-Evaluation	SelfEvaluator (clarity, novelty, redundancy)
-Compression	MemoryCompressor (long-term summarization)
-Research	ResearchAgent (Ollama-based summarization + web search)
+Memory	Chroma vector store + SQLite Insight DB
+Reflection	Autonomous summarization + question generation
+Evaluation	SelfEvaluator (clarity / novelty / redundancy)
+Compression	Memory Compressor (long-term summaries)
+Research	Ollama ResearchAgent + optional SERPER API
+Visualization	Streamlit Dashboard + Plotly + PyVis
+Automation	LangGraph workflow orchestrator
 
 
 ⸻
 
-🧩 Example Flow
+🧩 Example End-to-End Run
 
-# 1. Ingest notes
 uv run asb ingest
-
-# 2. Reflect on learnings
 uv run asb reflect
-
-# 3. Compress old reflections
-uv run asb compress -d 14
-
-# 4. Self-evaluate reflections
 uv run asb evaluate -d 7
-uv run asb metrics
-
-# 5. Auto-research open questions
 uv run asb research -m 3
-
-# 6. Review new insights
-uv run asb insights research
+uv run asb compress
+uv run asb automate        # Full LangGraph loop
+uv run streamlit run asb/dashboard.py
 
 
 ⸻
 
-🚀 Future Roadmap
+🚀 Future Phases
 
-Phase 9 — Insight Dashboard
-	•	Streamlit-based visualization
-	•	Reflection timelines, scores, and knowledge graph
+Phase 10 – Emotional & Context Modeling
 
-Phase 10 — Emotional Context Modeling
-	•	Track tone, stress, and motivation in reflections
+Sentiment + tone analysis of reflections; emotional trend visualization.
 
-Phase 11 — Continuous Learning
-	•	Real-time integration with GitHub activity, papers, and notes
+Phase 11 – Multi-Agent Coordination
+
+Specialized sub-agents (Reflector, Researcher, Evaluator, Archivist) communicating via LangGraph shared memory.
 
 ⸻
 
 🧑‍💻 Author
 
-Chitrank Dixit
-Building an evolving, privacy-first AI system that learns alongside its creator.
+Chitrank Dixit — Building an evolving, privacy-first AI that learns alongside its creator.
 
 ⸻
 
@@ -251,8 +258,10 @@ Building an evolving, privacy-first AI system that learns alongside its creator.
 
 MIT License © 2025 Chitrank Dixit
 
-“Your second brain should think with you, not for you.”
+⸻
+
+🧠 “From notes to knowledge to wisdom — autonomously.”
 
 ---
 
-Would you like me to add optional **badges** (Python | Ollama | LangChain | Made with uv) and a **project banner header** so the README looks fully production-ready for GitHub?
+Would you like me to add **GitHub-ready badges + screenshots section** (Python | Ollama | LangChain | Streamlit | LangGraph) so your README looks polished for public release?

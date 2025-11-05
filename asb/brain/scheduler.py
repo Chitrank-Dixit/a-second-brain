@@ -5,6 +5,7 @@ import time
 from asb.brain.logger import setup_logger
 from asb.brain.memory_compressor import MemoryCompressor
 from asb.brain.research_agent import ResearchAgent
+from asb.brain.automation_graph import workflow
 log = setup_logger()
 
 
@@ -45,6 +46,19 @@ def start_weekly_research():
     scheduler.add_job(ra.run_autonomous_research, 'interval', days=7)
     scheduler.start()
     print("🤖 Weekly autonomous research enabled.")
+    try:
+        while True:
+            time.sleep(60)
+    except KeyboardInterrupt:
+        scheduler.shutdown()
+
+
+
+def start_autonomous_loop():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(lambda: workflow.invoke({}), 'interval', days=1)
+    scheduler.start()
+    print("🧠 ASB automation loop scheduled every 24 hours.")
     try:
         while True:
             time.sleep(60)
